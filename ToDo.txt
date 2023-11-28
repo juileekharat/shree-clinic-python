@@ -1,0 +1,20 @@
+
+1. Main - Add code into Git - done
+2. Add Pagination on Table - done
+3. Export Patient Data
+4. Upload CSV/xls file of Patient Data - Create Patient in database - https://www.geeksforgeeks.org/upload-and-read-excel-file-in-flask/
+5. Image Uploader - done
+6. Add confirmation dalouge on Delete
+7. Add filtering and sorting on Table
+8. View uploaded documents
+9. On patient table option to view all documents
+10. Back button on all pages
+11. jpg to png converter Rest API
+12. other than JPg other docs are not opening
+13. Add forgot password
+14. Display logged in user details in right
+15. Styless SIgn updd form like Login form
+
+
+Utility:
+    Scheudler utilit whicch vovereter image formats from hotfolder
