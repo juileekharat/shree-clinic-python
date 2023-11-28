@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, request, flash, redirect, url_for, jsonify, make_response
+from flask import Blueprint, render_template, request, flash, redirect, url_for, jsonify
 from flask_login import current_user
 from .models import Patient
 from datetime import datetime
