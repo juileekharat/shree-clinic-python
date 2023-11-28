@@ -1,0 +1,34 @@
+{% extends "base.html" %} {% block title %}Add Patients{% endblock %}{% block content %}
+<br/>
+<h4 align="center">Add Patients</h4>
+<div id="add_patient_div">
+    <form action="{{ url_for('patients.add_patient')}}" method="POST">
+        <input type="hidden" class="form-control" id="patientId" />
+        <div class="form-group">
+            <label for="name">Patient Name</label>
+            <input type="text" class="form-control" id="name" name="name" placeholder="Enter Patient Name" />
+        </div>
+        <div class="form-group">
+            <label for="age">Age</label>
+            <input type="text" class="form-control" id="age" name="age" placeholder="Enter Age"/>
+        </div>
+        <div class="form-group">
+            <label for="bloodGroup">Blood Group</label>
+            <input type="text" class="form-control" id="bloodGroup" name="bloodGroup" placeholder="Enter Blood Group"/>
+        </div>
+        <div class="form-group">
+            <label for="treatment">Treatment</label>
+            <input type="text" class="form-control" id="treatment" name="treatment" placeholder="Enter Treatment"/>
+        </div>
+        <div class="form-group">
+            <label for="patientSince">Patient Since</label> 
+            <input type="date" class="form-control" id="patientSince" name="patientSince" placeholder="Enter Patient Since Date"/>
+        </div>
+        <div class="form-group">
+            <label for="history">History</label>
+            <input type="text" class="form-control" id="history" name="history" placeholder="Enter History"/>
+        </div>
+        <button type="submit" class="btn btn-success btn-sm">Submit</button>
+    </form>    
+</div>
+{% endblock %}
