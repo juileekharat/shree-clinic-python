@@ -1,11 +1,15 @@
-{% extends "base.html" %} {% block title %}Patients{% endblock %}{% block content %}
+{% extends "base.html" %} {% block title %}Patients{% endblock %}
+{% block content %}
 <br/>
+{% block go_back %}
+<a href="javascript:history.back()" class="btn btn-outline-success btn-sm" style="float:left;">  <i class="fa fa-arrow-left"></i> Back </a> 
+{% endblock %}
 <button type="btn" class="btn btn-outline-success btn-sm" style="float:right;" id="add_search_patient_btn" onclick="window.location.href='{{ url_for('patients.add_patient_redirect')}}'">Add Patient</button>
 <div id="search_patient_div" >
     <form action="{{ url_for('patients.get_patient') }}" method="POST">
-        <h3 align="center">Patients</h3>
+        <h3 align="center">Patients</h3><br/>
         <div class="form-group">
-            <label for="id">Patient ID</label>
+            <label for="id"><b>Patient ID</b></label>
             <input type="text" class="form-control" id="id" name="id" placeholder="Enter Patient ID"/>
         </div>
         <button type="submit" class="btn btn-success btn-sm">Search</button>  
@@ -40,12 +44,12 @@
                         <td class="text-center" >{{ item.patient_since }}</td>
                         <td class="text-center" >{{ item.history }}</td>
                         <td class="text-center" >
-                            <button type="button" class='btn btn-outline-success btn-sm' onclick="window.location.href='{{url_for('patients.fetch_patient',id=item.id)}}'">
+                            <button type="button" class='btn btn-outline-success btn-sm' onclick="window.location.href='{{url_for('patients.fetch_patient',id=item.id, action='upload')}}'">
                                 <i class="fa fa-file"></i>
                             </button>
                         </td>
                         <td class="text-center" >
-                            <button type="button" class='btn btn-outline-success btn-sm' onclick="window.location.href='{{url_for('patients.fetch_patient',id=item.id)}}'">
+                            <button type="button" class='btn btn-outline-success btn-sm' onclick="window.location.href='{{url_for('patients.fetch_patient',id=item.id, action='edit')}}'">
                                 <i class="fa fa-edit"></i>
                             </button>
                         </td>

@@ -57,9 +57,10 @@
             {% endfor %}
         {% endif %}
         {% endwith %}
-
         <div class="container">
             {% block content %}
+            {% block go_back %}
+            {% endblock %}
             {% endblock %}
         </div>
         <script

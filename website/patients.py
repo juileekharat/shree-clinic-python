@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, request, flash, redirect, url_for, jsonify
+from flask import Blueprint, render_template, request, flash, redirect, url_for, jsonify, Response
 from flask_login import current_user
 from .models import Patient, Documents
 from datetime import datetime
@@ -51,7 +51,11 @@ def add_patient():
 def fetch_patient():
     patientId = request.args.get('id')
     patient = Patient.query.get(patientId)
-    #return render_template("patients/edit_patients.html", user=current_user, data=patient) - Fix it with parameter
+
+    action = request.args.get('action')
+    if action == 'edit':
+        return render_template("patients/edit_patients.html", user=current_user, data=patient)
+    
     return render_template("patients/upload_documents.html", user=current_user, data=patient) 
  
 @patients.route('/get-patient', methods=['POST', 'GET'])
@@ -123,14 +127,26 @@ def upload_documents():
     if not documentFile:
         flash('No file selected', category='error')
     else:
-        fileName = secure_filename(documentFile.filename)
-        mimeType = documentFile.mimetype
-        document = Documents(image_buffer=documentFile.read(), mimetype=mimeType, document_name=fileName, patient_id=id)
-        db.session.add(document)
-        db.session.commit()
-        flash('Document has been uploaded', category='success')
+        document = Documents.query.filter_by(image_buffer=documentFile.read()).first()
+        if document:
+            flash('Document already exists.', category='error')
+        else:
+            fileName = secure_filename(documentFile.filename)
+            mimeType = documentFile.mimetype
+            document = Documents(image_buffer=documentFile.read(), mimetype=mimeType, document_name=fileName, patient_id=id)
+            db.session.add(document)
+            db.session.commit()
+            flash('Document has been uploaded', category='success')
+        
+    patient = Patient.query.filter_by(id=id).first()
 
-    return render_template("patients/patients.html", user=current_user)
+    return render_template("patients/upload_documents.html", user=current_user, data=patient)
 
+@patients.route('/<int:id>')
+def get_document(id):
+    document = Documents.query.filter_by(id=id).first()
+    if not document:
+        flash('Document does not exist', category='error')
 
+    return Response(document.image_buffer, mimetype=document.mimetype)
 
