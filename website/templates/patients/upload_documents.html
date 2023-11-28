@@ -1,0 +1,18 @@
+{% extends "base.html" %} {% block title %}Add Documents{% endblock %}{% block content %}
+<br/>
+<h4 align="center">Upload Documents</h4>
+<form action="{{ url_for('patients.upload_documents')}}" enctype="multipart/form-data" method="POST">
+    <div class="form-group">
+        <label for="id">Patient ID</label>: <b> {{data.id}} </b>
+        <input type="hidden" class="form-control" id="id" name="id" value="{{data.id}}"/>
+    </div>
+    <div class="form-group">
+        <label for="name">Patient Name</label>: <b> {{data.name}} </b>
+        <input type="hidden" class="form-control" id="name" name="name" placeholder="Enter Patient Name" value="{{data.name}}"/>
+    </div>
+    <div class="form-group">
+        <input type="file" name="documentFile"/><br/><br/>
+        <input type="Submit" class="form-control" value="Upload a file"/>
+    </div>
+</form>    
+{% endblock %}

@@ -28,6 +28,14 @@ class User(db.Model, UserMixin):
     password = db.Column(db.String(150))
     first_name = db.Column(db.String(150))
     notes = db.relationship('Note')
+
+@dataclass
+class Documents(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    image_buffer = db.Column(db.Text, unique=True, nullable=False)
+    document_name = db.Column(db.Text, nullable=False)
+    mimetype = db.Column(db.Text, nullable=False)
+    patient_id = db.Column(db.Integer ,db.ForeignKey('patient.id'))
     
     
 

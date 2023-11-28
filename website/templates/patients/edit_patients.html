@@ -3,7 +3,6 @@
 <h4 align="center">Edit Patient</h4>
 <div id="edit_patient_div">
     <form method="POST" action="{{ url_for('patients.edit_patient') }}">
-        <!-- <input type="hidden" class="form-control" id="id" value="{{data.id}}"/> -->
         <div class="form-group">
             <label for="id">Patient ID</label>: <b> {{data.id}} </b>
             <input type="hidden" class="form-control" id="id" name="id" value="{{data.id}}"/>
@@ -16,7 +15,7 @@
             <label for="age">Age</label>
             <input type="text" class="form-control" id="age" name="age" placeholder="Enter Age" value="{{data.age}}"/>
         </div>
-        <div class="form-group">s
+        <div class="form-group">
             <label for="bloodGroup">Blood Group</label>
             <input type="text" class="form-control" id="bloodGroup" name="bloodGroup" placeholder="Enter Blood Group" value="{{data.blood_group}}"/>
         </div>

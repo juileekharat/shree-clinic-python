@@ -1,7 +1,9 @@
 from flask import Blueprint, render_template, request, flash, redirect, url_for, jsonify
 from flask_login import current_user
-from .models import Patient
+from .models import Patient, Documents
 from datetime import datetime
+from flask_sqlalchemy import pagination
+from werkzeug.utils import secure_filename
 from . import db 
 import json
 
@@ -9,7 +11,8 @@ patients = Blueprint('patients', __name__)
 
 @patients.route('/patients', methods=['POST', 'GET'])
 def display_patients(): 
-    patients = Patient.query.all()
+    page = request.args.get('page', 1, type=int)
+    patients = Patient.query.filter_by().paginate(page=page, per_page=10)
     return render_template("patients/patients.html", user=current_user, data=patients)
 
 @patients.route('/add_patient_redirect')
@@ -48,8 +51,8 @@ def add_patient():
 def fetch_patient():
     patientId = request.args.get('id')
     patient = Patient.query.get(patientId)
-    #patient = Patient.query.filter_by(id=patientId).all()
-    return render_template("patients/edit_patients.html", user=current_user, data=patient)
+    #return render_template("patients/edit_patients.html", user=current_user, data=patient) - Fix it with parameter
+    return render_template("patients/upload_documents.html", user=current_user, data=patient) 
  
 @patients.route('/get-patient', methods=['POST', 'GET'])
 def get_patient():
@@ -107,35 +110,27 @@ def delete_Patient():
     patientId = data['patientId']
     patient = Patient.query.get(patientId)
     if patient:
-            db.session.delete(patient)
+            #db.session.delete(patient)
             db.session.commit()
             flash('Patient Deleted', category='success')
     return jsonify({})
 
-# @patients.route('/fetch_patient', methods=['POST'])
-# def fetch_patient():
-#     try:
-#         data = json.loads(request.data)
-#         print(data)
-#         patientId = data['patientId']
-#         patient = Patient.query.get(patientId)
-#         #patient = Patient.query.filter_by(id=patientId).all()
-#         data = {'id': patient.id,
-#                 'name': patient.name,
-#                 'age': patient.age,
-#                 'bloodGroup': patient.blood_group,
-#                 'treatment': patient.treatment,
-#                 'patientSince': patient.patient_since,
-#                 'history': patient.history }
-#         return jsonify(data), 200 , ({'ContentType':'application/json'}) 
-#     except Exception as e:
-#             print(e)  
-#             # Now you can see what the real issue is...
-#             return json.dumps({'success':True}), 200, ({'ContentType':'application/json'})
+@patients.route('/upload_documents', methods=['POST'])
+def upload_documents():
+    id = request.form.get('id')
+    documentFile = request.files['documentFile']
 
+    if not documentFile:
+        flash('No file selected', category='error')
+    else:
+        fileName = secure_filename(documentFile.filename)
+        mimeType = documentFile.mimetype
+        document = Documents(image_buffer=documentFile.read(), mimetype=mimeType, document_name=fileName, patient_id=id)
+        db.session.add(document)
+        db.session.commit()
+        flash('Document has been uploaded', category='success')
 
-
-
+    return render_template("patients/patients.html", user=current_user)
 
 
 

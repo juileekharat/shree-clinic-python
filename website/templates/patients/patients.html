@@ -24,12 +24,13 @@
                     <th class="text-center" scope="col">Treatment</th>
                     <th class="text-center" scope="col">Patient Since</th>
                     <th class="text-center" scope="col">History</th>
+                    <th class="text-center" scope="col">Upload</th>
                     <th class="text-center" scope="col">Edit</th>
                     <th class="text-center" scope="col">Delete</th>
                 </tr>
             </thead>
             <tbody>
-                {% for item in data %}
+                {% for item in data.items %}
                     <tr>
                         <th class="text-center" scope="row">{{ item.id }}</th>
                         <td class="text-center" >{{ item.name }}</td>
@@ -38,6 +39,11 @@
                         <td class="text-center" >{{ item.treatment }}</td>
                         <td class="text-center" >{{ item.patient_since }}</td>
                         <td class="text-center" >{{ item.history }}</td>
+                        <td class="text-center" >
+                            <button type="button" class='btn btn-outline-success btn-sm' onclick="window.location.href='{{url_for('patients.fetch_patient',id=item.id)}}'">
+                                <i class="fa fa-file"></i>
+                            </button>
+                        </td>
                         <td class="text-center" >
                             <button type="button" class='btn btn-outline-success btn-sm' onclick="window.location.href='{{url_for('patients.fetch_patient',id=item.id)}}'">
                                 <i class="fa fa-edit"></i>
@@ -52,6 +58,17 @@
                 {% endfor %}
             </tbody>
         </table>
+        {% for page_num in data.iter_pages(left_edge=1, right_edge=1, left_current=1, right_current=1) %}
+        {% if page_num %}
+        {% if data.page == page_num %}
+            <a class="btn btn-success btn-sm" href="{{ url_for('patients.display_patients', page=page_num)}}">{{ page_num }}</a>
+        {% else %}
+            <a class="btn btn-outline-success btn-sm" href="{{ url_for('patients.display_patients', page=page_num)}}">{{ page_num }}</a>
+        {% endif %} 
+        {% else %}
+         ... 
+        {% endif %}
+        {% endfor %}
     </div>
 {% endif %}
 {% endblock %}

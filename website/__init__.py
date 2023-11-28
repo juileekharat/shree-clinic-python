@@ -2,10 +2,10 @@ from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from os import path
 from flask_login import LoginManager
-from flask_migrate import Migrate
+#from flask_migrate import Migrate
 
 db = SQLAlchemy()
-migrate = Migrate()
+#migrate = Migrate()
 DB_NAME = 'database.db'
 
 def create_app():
@@ -39,7 +39,7 @@ def create_app():
 def create_database(app):
     if not path.exists('website/' + DB_NAME):
         with app.app_context():
-            #db.drop_all()
+            db.drop_all()
             db.create_all()
-            migrate.init_app(app,db)
-        print('Create Database!')
+            #migrate.init_app(app,db)
+        print('Created Database!')
