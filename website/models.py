@@ -32,7 +32,7 @@ class User(db.Model, UserMixin):
 @dataclass
 class Documents(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    image_buffer = db.Column(db.Text, unique=True, nullable=False)
+    image_buffer = db.Column(db.Text, nullable=False)
     document_name = db.Column(db.Text, nullable=False)
     mimetype = db.Column(db.Text, nullable=False)
     patient_id = db.Column(db.Integer ,db.ForeignKey('patient.id'))

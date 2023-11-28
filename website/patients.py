@@ -6,6 +6,7 @@ from flask_sqlalchemy import pagination
 from werkzeug.utils import secure_filename
 from . import db 
 import json
+import os
 
 patients = Blueprint('patients', __name__)
 
@@ -60,11 +61,12 @@ def fetch_patient():
  
 @patients.route('/get-patient', methods=['POST', 'GET'])
 def get_patient():
-    patient = ""
+    page = request.args.get('page', 1, type=int)
     args = []
     id = request.form.get('id')
     args.append(Patient.id.like('%%%s%%' % id))
-    patient = Patient.query.filter(*args).all()
+    patient = Patient.query.filter(*args).paginate(page=page, per_page=10)
+    print(patient)
     if patient:
         pass
     else:
@@ -123,28 +125,38 @@ def delete_Patient():
 def upload_documents():
     id = request.form.get('id')
     documentFile = request.files['documentFile']
+    displayDocument = "false"
 
     if not documentFile:
         flash('No file selected', category='error')
     else:
-        document = Documents.query.filter_by(image_buffer=documentFile.read()).first()
-        if document:
+        fileName = secure_filename(documentFile.filename)
+        mimeType = documentFile.mimetype
+        documentCount = Documents.query.filter_by(document_name=fileName).count()
+        if documentCount > 1:
             flash('Document already exists.', category='error')
         else:
-            fileName = secure_filename(documentFile.filename)
-            mimeType = documentFile.mimetype
-            document = Documents(image_buffer=documentFile.read(), mimetype=mimeType, document_name=fileName, patient_id=id)
-            db.session.add(document)
-            db.session.commit()
-            flash('Document has been uploaded', category='success')
+            #Get File Size in KB
+            blob = documentFile.read()
+            documentSize = len(blob)/1000
+
+            if documentSize > 500:
+                flash('File size must be 500KB.', category='error')
+            else:
+                displayDocument = "true"
+                document = Documents(image_buffer=documentFile.read(), mimetype=mimeType, document_name=fileName, patient_id=id)
+                db.session.add(document)
+                db.session.commit()
+                flash('Document has been uploaded', category='success')
         
     patient = Patient.query.filter_by(id=id).first()
 
-    return render_template("patients/upload_documents.html", user=current_user, data=patient)
+    return render_template("patients/upload_documents.html", user=current_user, data=patient, displayDocument=displayDocument)
 
-@patients.route('/<int:id>')
-def get_document(id):
+@patients.route('/upload_documents/<int:id>', methods=['POST','GET'])
+def view_document(id):
     document = Documents.query.filter_by(id=id).first()
+    print(document)
     if not document:
         flash('Document does not exist', category='error')
 

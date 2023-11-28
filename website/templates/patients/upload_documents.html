@@ -14,5 +14,10 @@
         <input type="file" name="documentFile"/><br/><br/>
         <input type="Submit" class="form-control" value="Upload a file"/>
     </div>
-</form>    
+</form>   
+{% if displayDocument == "true" %}
+<form method="POST" action="{{ url_for('patients.view_document', id=data.id)}}" target="_blank">
+    <button type="submit" class="btn btn-link btn-sm"> View Uploaded Document</button>
+</form> 
+{% endif %}
 {% endblock %}
